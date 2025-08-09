@@ -1,0 +1,24 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CreateTransactionResponse {
+  message: String!
+  status: String!
+  transactionId: String!
+}
+
+type Query {
+  sayHello: String!
+}
+
+type Mutation {
+  createTransaction(input: CreateTransactionDto!): CreateTransactionResponse!
+}
+
+input CreateTransactionDto {
+  accountExternalIdDebit: String!
+  accountExternalIdCredit: String!
+  tranferTypeId: Float!
+  value: Float!
+}

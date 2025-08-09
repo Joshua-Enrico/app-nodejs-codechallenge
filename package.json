@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "@types/graphql": "^14.2.3",
+    "@types/node": "^24.2.1",
+    "prisma": "^6.13.0"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.6",
+    "@prisma/client": "^6.13.0"
+  }
+}

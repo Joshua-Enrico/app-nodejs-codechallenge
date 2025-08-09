@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Transaction {
+  id                      String               @id @default(uuid())
+  transactionExternalId   String               @unique @db.Uuid
+  accountExternalIdDebit  String               @db.Uuid
+  accountExternalIdCredit String               @db.Uuid
+  transactionTypeId       Int
+  transactionStatusId     Int
+  value                   Decimal              @db.Decimal(15, 2)
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
+
+  type    TransactionType   @relation(fields: [transactionTypeId], references: [id])
+  status  TransactionStatus @relation(fields: [transactionStatusId], references: [id])
+}
+
+model TransactionType {
+  id           Int           @id
+  name         String        @db.VarChar(50)
+  transactions Transaction[]
+}
+
+model TransactionStatus {
+  id           Int           @id
+  name         String        @db.VarChar(50)
+  transactions Transaction[]
+}

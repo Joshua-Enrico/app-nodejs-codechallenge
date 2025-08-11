@@ -13,12 +13,23 @@ create_topic() {
   kafka-topics --create --topic "$1" --partitions 3 --replication-factor 1 --bootstrap-server kafka:29092 2>&1 | grep -q 'Topic.*already exists' && echo "Tópico $1 ya existe." || echo "Tópico $1 creado."
 }
 
-create_topic transactions.created
-create_topic transactions.validated
-create_topic transactions.status.updated
+create_topic transactions.created.request
+create_topic transactions.created.response
+create_topic transactions.validated.request
+create_topic transactions.validated.request.update
+create_topic transactions.validated.request.update.response
+create_topic transactions.get.request
+create_topic transactions.get.response
 
-create_topic transactions.created.dlq
-create_topic transactions.validated.dlq
-create_topic transactions.status.updated.dlq
+# DLQ
+create_topic transactions.created.request.dlq
+create_topic transactions.created.response.dlq
+create_topic transactions.validated.request.dlq
+create_topic transactions.validated.request.update.dlq
+create_topic transactions.validated.request.update.response.dlq
+create_topic transactions.get.request.dlq
+create_topic transactions.get.response.dlq
+
+
 
 echo "Proceso terminado."

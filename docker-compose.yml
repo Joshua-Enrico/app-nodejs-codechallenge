@@ -30,15 +30,9 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9991
-      KAFKA_CREATE_TOPICS: >
-        transactions.created:3:1,
-        transactions.validated:3:1,
-        transactions.status.updated:3:1,
-        transactions.created.dlq:3:1,
-        transactions.validated.dlq:3:1,
-        transactions.status.updated.dlq:3:1
     ports:
       - "9092:9092"
+
 
   redpanda-console:
     image: docker.redpanda.com/redpandadata/console:v3.1.3
@@ -77,5 +71,69 @@ services:
       done; \
       echo 'Aplicando migraciones Prisma...'; \
       npx prisma migrate deploy; \
-      echo 'Migraciones aplicadas.';
+      echo 'Migraciones aplicadas.'; \
+      echo 'Insertando data base...'; \
+      PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -f /app/prisma/init-data.sql; \
+      echo 'Data base insertada.'; 
       "
+
+  emit-transaction:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      KAFKA_BROKERS: kafka:29092
+    command: ["npm", "run", "start:emit-transaction"]
+    working_dir: /app
+    ports:
+      - "3000:3000"
+
+
+  create-transaction:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      KAFKA_BROKERS: kafka:29092
+    command: ["npm", "run", "start:create-transaction"]
+    volumes:
+      - ./:/app
+    working_dir: /app
+
+  fraud-validator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      KAFKA_BROKERS: kafka:29092
+    command: ["npm", "run", "start:fraud-validator"]
+    volumes:
+      - ./:/app
+    working_dir: /app
+
+  fraud-validator-update:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      KAFKA_BROKERS: kafka:29092
+    command: ["npm", "run", "start:fraud-validator-update"]
+    volumes:
+      - ./:/app
+    working_dir: /app

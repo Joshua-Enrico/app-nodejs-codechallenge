@@ -8,6 +8,8 @@ async function bootstrap() {
 
   // Crear app Nest normal (HTTP u otro tipo)
   const app = await NestFactory.create(AppCreateTransactionModule);
+  // Habilita validación global de DTOs
+  app.useGlobalPipes(new (await import('@nestjs/common')).ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
   // Aquí no usas createMicroservice con Kafka porque Kafka lo manejas tú manualmente
   // Los servicios internos (como TransactionConsumerService) harán el connect, subscribe, run, etc.

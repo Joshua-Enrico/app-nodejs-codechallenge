@@ -1,13 +1,26 @@
 
-export class TransactionDto {
-  accountExternalIdDebit: string;
-  accountExternalIdCredit: string;
-  tranferTypeId: number;
-  value: number;
-}
 
+import { IsString, IsNumber, IsUUID, IsNotEmpty } from 'class-validator';
+export class TransactionDto {
+  @IsUUID()
+  @IsNotEmpty()
+  transactionId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  accountExternalIdDebit: string;
+
+  @IsString()
+  @IsNotEmpty()
+  accountExternalIdCredit: string;
+
+}
 export class TransactionGetDto {
+
+  @IsNumber()
   transactionExternalId: string;
+
+  @IsNumber()
   transactionType: { name: string };
   transactionStatus: { name: string };
   value: number;
@@ -31,7 +44,7 @@ export class TransactionGetDto {
   }
 
   // Método estático para construir DTO desde objeto Prisma con include de status
-  static fromPrisma(transaction: any): TransactionGetDto {
+  static fromPrisma(transaction: { transactionExternalId: string; transferType: number; status?: { name: string }; value: any; createdAt: Date }): TransactionGetDto {
     return new TransactionGetDto({
       transactionExternalId: transaction.transactionExternalId,
       transferType: transaction.transferType,

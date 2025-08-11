@@ -1,4 +1,5 @@
 import { Inject, Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { CreateTransactionDto, CreateTransactionEmittDto } from '../../dtos/create-transaction.dto';
 import { ClientKafka } from '@nestjs/microservices';
 import { Producer, RecordMetadata } from 'kafkajs';
 import { TRANSACTION_STATUS, TRANSACTION_TOPICS } from 'src/commons/constants';
@@ -20,7 +21,7 @@ export class TransactionCreatedProducerService implements OnModuleInit, OnModule
     this.producer = this.kafkaClient['producer'];
   }
 
-  async produceTransactionEvent(createTransactionDto: any) {
+  async produceTransactionEvent(createTransactionDto: CreateTransactionEmittDto) {
     const { transactionId } = createTransactionDto;
     const transactionStatusId = TRANSACTION_STATUS.PENDING
 
@@ -33,7 +34,6 @@ export class TransactionCreatedProducerService implements OnModuleInit, OnModule
           {
             key: transactionId,
             value: JSON.stringify({
-              transactionId,
               transactionStatusId,
               ...createTransactionDto,
             }),

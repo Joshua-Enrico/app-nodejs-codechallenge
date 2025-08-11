@@ -1,4 +1,5 @@
 import { Inject, Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { ValidateTransactionRequestEventDto } from 'src/modules/transaction/dtos/create-transaction.dto';
 import { ClientKafka } from '@nestjs/microservices';
 import { Producer, RecordMetadata } from 'kafkajs';
 import { TRANSACTION_TOPICS } from 'src/commons/constants';
@@ -20,7 +21,7 @@ export class FraudValStatusUpdateResponse implements OnModuleInit, OnModuleDestr
     this.producer = this.kafkaClient['producer'];
   }
 
-  async produceTransactionEvent(createTransactionDto: any) {
+  async produceTransactionEvent(createTransactionDto: ValidateTransactionRequestEventDto) {
     const { transactionId } = createTransactionDto;
 
     try {
@@ -32,7 +33,6 @@ export class FraudValStatusUpdateResponse implements OnModuleInit, OnModuleDestr
           {
             key: transactionId,
             value: JSON.stringify({
-              transactionId,
               ...createTransactionDto,
             }),
           },

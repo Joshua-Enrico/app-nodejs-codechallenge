@@ -17,7 +17,6 @@ export class GetTransactionService {
         }
         console.log('Transaction found:', transaction);
         return {
-            status: 'FOUND',
             data: transaction,
         };
 

@@ -9,8 +9,6 @@ async function bootstrap() {
   // Crear app Nest normal (HTTP u otro tipo)
   const app = await NestFactory.create(FraudValidationModule);
 
-  // Aquí no usas createMicroservice con Kafka porque Kafka lo manejas tú manualmente
-  // Los servicios internos (como TransactionConsumerService) harán el connect, subscribe, run, etc.
 
   // Manejo global de errores no capturados
   process.on('uncaughtException', (e) => logger.error('Uncaught Exception', e));

@@ -1,4 +1,5 @@
 import { Inject, Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { CreateTransactionDto, CreateTransactionEventDto } from '../../dtos/create-transaction.dto';
 import { ClientKafka } from '@nestjs/microservices';
 import { Producer, RecordMetadata } from 'kafkajs';
 import { TRANSACTION_TOPICS } from 'src/commons/constants';
@@ -17,7 +18,7 @@ export class TransactionCreationRequestReponse implements OnModuleInit, OnModule
     this.producer = this.kafkaClient['producer'];
   }
  
-  async produceTransactionEvent(createTransactionDto: any) {
+  async produceTransactionEvent(createTransactionDto: CreateTransactionEventDto) {
     const { transactionId } = createTransactionDto;
 
     try {
@@ -29,7 +30,6 @@ export class TransactionCreationRequestReponse implements OnModuleInit, OnModule
           {
             key: transactionId,
             value: JSON.stringify({
-              transactionId,
               ...createTransactionDto,
             }),
           },

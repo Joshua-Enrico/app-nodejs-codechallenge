@@ -3,6 +3,7 @@ import { TransactionDto } from '../../dtos/transaction.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { TransactionCreatedProducerService } from '../producers/producer-creation-request';
 import { TRANSACTION_MESSAGES } from 'src/commons/constants';
+import { CreateTransactionDto } from '../../dtos/create-transaction.dto';
 
 @Injectable()
 export class CreateTransactionServiceTsService {
@@ -11,7 +12,7 @@ export class CreateTransactionServiceTsService {
     private readonly transactionCreatedProducerService: TransactionCreatedProducerService
   ) { }
 
-  async produceTransactionEvent(createTransactionDto: TransactionDto): Promise<any> {
+  async produceTransactionEvent(createTransactionDto: CreateTransactionDto): Promise<any> {
 
     const transactionId = uuidv4(); // Generate a unique transaction ID
     console.log('Producing transaction event:', {

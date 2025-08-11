@@ -37,7 +37,7 @@ export class TransactionConsumerService implements OnModuleInit, OnModuleDestroy
         const { topic, partition, message } = payload;
         const offset = message.offset;
         const key = message.key?.toString();
-        const value: any = message.value?.toString();
+  const value: string = message.value?.toString() || '';
 
         this.logger.log(`Received message key=${key} topic=${topic} partition=${partition} offset=${offset}`);
 

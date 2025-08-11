@@ -36,7 +36,7 @@ export class ApplyFraudValidationConsumer implements OnModuleInit, OnModuleDestr
         const { topic, partition, message } = payload;
         const offset = message.offset;
         const key = message.key?.toString();
-        const value: any = message.value?.toString();
+        const value: string = message.value?.toString() || '';
 
         this.logger.log(`Received message key=${key} topic=${topic} partition=${partition} offset=${offset}`);
 
@@ -51,8 +51,8 @@ export class ApplyFraudValidationConsumer implements OnModuleInit, OnModuleDestr
             const res = await this.applyFraudValidationService.apllyFraudValidation(data);
 
             await this.updateTransacStatusReqProducer.transactionUpdateRequestEvent({
-              transactionId: data.transactionId,
               transactionStatusId: res.transactionStatusId,
+              transactionId: data.transactionId,
               message: 'Transaction validated successfully',
             });
 

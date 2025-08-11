@@ -1,4 +1,5 @@
 import { Inject, Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { CreateTransactionRequestEventDto } from 'src/modules/transaction/dtos/create-transaction.dto';
 import { ClientKafka } from '@nestjs/microservices';
 import { Producer, RecordMetadata } from 'kafkajs';
 import { TRANSACTION_TOPICS } from 'src/commons/constants';
@@ -17,8 +18,8 @@ export class UpdateTransacStatusReqProducer implements OnModuleInit, OnModuleDes
     this.producer = this.kafkaClient['producer'];
   }
  
-  async transactionUpdateRequestEvent(createTransactionDto: any) {
-    const { transactionId, transactionStatusId } = createTransactionDto;
+  async transactionUpdateRequestEvent(createTransactionDto: CreateTransactionRequestEventDto) {
+    const { transactionId } = createTransactionDto;
 
     try {
       // Enviar mensaje a Kafka con confirmación de escritura en todas las réplicas
@@ -29,8 +30,6 @@ export class UpdateTransacStatusReqProducer implements OnModuleInit, OnModuleDes
           {
             key: transactionId,
             value: JSON.stringify({
-              transactionId,
-              transactionStatusId,
               ...createTransactionDto,
             }),
           },

@@ -37,6 +37,55 @@ Este repositorio implementa un microservicio de transacciones financieras con va
 
 ## Uso de Docker
 
+# API Endpoints
+
+## Crear Transacción
+
+- **URL:** `http://localhost:3000/transactions`
+- **Método:** `POST`
+- **Content-Type:** `application/json`
+- **Descripción:** Crea una nueva transacción con los datos proporcionados.
+
+### Request Body
+
+```json
+{
+  "accountExternalIdDebit": "3f8d2a57-9cde-4f6b-8fbb-234b59a17d2a",
+  "accountExternalIdCredit": "a72d4b86-1f9a-4b5a-8c6d-7f9e2c3a1b4e",
+  "tranferTypeId": 1,
+  "value": 1500
+}
+{
+  "message": "Transaccion",
+  "data": {
+    "status": "Transacción creada correctamente",
+    "transactionId": "a908a729-64cf-40ff-945a-df9a045357a3"
+  }
+}
+
+```
+- **URL:** `http://localhost:3000/transactions/{transactionId}`
+- **Método:** `GET`
+- **Content-Type:** `application/json`
+- **Descripción:** Obtiene una transaccion por ID generado
+
+### Request Body
+
+```json
+{
+  "transactionExternalId": "a908a729-64cf-40ff-945a-df9a045357a3",
+  "transactionType": {
+    "name": "1"
+  },
+  "transactionStatus": {
+    "name": "rejected"
+  },
+  "value": 1500,
+  "createdAt": "2025-08-11T15:45:31.008Z"
+}
+```
+
+
 ### docker-compose.yml
 
 Incluye los servicios:

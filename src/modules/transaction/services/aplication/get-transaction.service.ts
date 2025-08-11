@@ -16,9 +16,7 @@ export class GetTransactionService {
             return { status: 'NOT_FOUND', message: 'Transaction not found' };
         }
         console.log('Transaction found:', transaction);
-        return {
-            data: transaction,
-        };
+        return transaction
 
     }
 }
